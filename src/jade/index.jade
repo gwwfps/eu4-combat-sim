@@ -1,38 +1,8 @@
 mixin css(href)
   link(href=href, rel='stylesheet', type='text/css')
 
-mixin gf-row(rowspan)
-  div(data-row-span=rowspan)
-    block
-
-mixin gf-field(label, fieldspan)
-  - fieldspan = fieldspan || 1
-  div(data-field-span=fieldspan)
-    label= label
-    block
-
-mixin side(name)
-  .one-half.column
-    h4= name
-    .grid-form
-      fieldset
-        legend Tech
-        +gf-row(3)
-          +gf-field("Infantry type")
-            input(type='text')
-          +gf-field("Calvary type")
-            input(type='text')
-          +gf-field("Artillery type")
-            input(type='text')
-      fieldset
-        legend Troops
-        +gf-row(3)
-          +gf-field("Infantry")
-            input(type='text')
-          +gf-field("Calvary")
-            input(type='text')
-          +gf-field("Artillery")
-            input(type='text')
+mixin js(src)
+  script(src=src, type='text/javascript')
 
 doctype html
 html
@@ -43,8 +13,5 @@ html
     +css('skeleton.css')
     +css('gridforms.css')
   body
-    .container
-      .row
-        +side("Attacker")
-        +side("Defender")
-    script(src='bundle.js', type='text/javascript')
+    #main.container    
+    +js('bundle.js')

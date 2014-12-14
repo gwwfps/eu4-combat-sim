@@ -28,6 +28,10 @@ gulp.task('browserify', function() {
     .require(require.resolve(path.jsmain), { entry: true })
     .transform(es6ify.configure(/^(?!.*node_modules)+.+\.js$/))
     .bundle()
+    .on('error', function(err) {
+      console.log(err.message);
+      this.end();
+    })
     .pipe(source('bundle.js'))
     .pipe(gulp.dest(path.dist))
     .pipe(connect.reload());
