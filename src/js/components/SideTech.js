@@ -1,41 +1,34 @@
-import {div, fieldset, legend, input, label} from '../lib/dom.js';
+import {input} from '../lib/dom.js';
+import {gfSubform, gfRow, gfField} from '../lib/gridforms.js';
 
 var React = require('react');
 
 
 export default React.createClass({
   render() {
-    return fieldset(
-      legend('Tech'),
-      div({ 'data-row-span': 4 }, 
-        div({ 'data-field-span': 1 },
-          label('Discipline'),
+    return gfSubform('Tech',
+      gfRow( 
+        gfField('Discipline',
           input({ 'type': 'text' })        
         ),
-        div({ 'data-field-span': 1 },
-          label('Morale'),
+        gfField('Morale',
           input({ 'type': 'text' })
         ),
-        div({ 'data-field-span': 1 },
-          label('Tactics'),
+        gfField('Tactics',
           input({ 'type': 'text' })
         ),
-        div({ 'data-field-span': 1 },
-          label('Combat Width'),
+        gfField('Combat Width',
           input({ 'type': 'text' })
         )
       ),
-      div({ 'data-row-span': 3 }, 
-        div({ 'data-field-span': 1 },
-          label('Infantry type'),
+      gfRow(
+        gfField('Infantry type',
           input({ 'type': 'text' })
         ),
-        div({ 'data-field-span': 1 },
-          label('Calvary type'),
+        gfField('Calvary type',
           input({ 'type': 'text' })
         ),
-        div({ 'data-field-span': 1 },
-          label('Artillery type'),
+        gfField('Artillery type',
           input({ 'type': 'text' })
         )
       )
