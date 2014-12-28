@@ -1,14 +1,13 @@
-var _ = require('lodash');
+import {shiftProps} from './utils.js'
+
 var React = require('react');
+
 
 // JS equivalent of github.com/atom/reactionary
 const DOM = React.DOM;
 
 var tag = (name, ...args) => {
-  var attributes = {};
-  if (args.length && _.isPlainObject(args[0])) {
-    attributes = args.shift();
-  }
+  var attributes = shiftProps(args);
   return DOM[name](attributes, ...args);
 };
 

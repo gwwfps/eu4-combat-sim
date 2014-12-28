@@ -1,5 +1,5 @@
-import {h4, div, fieldset, legend, input, label} from './utils/dom.js';
-import {compToEl} from './utils/helpers.js';
+import {h4, div, fieldset, legend, input, label} from './lib/dom.js';
+import {compToEl} from './lib/utils.js';
 
 import CombatSimulator from './components/CombatSimulator.js';
 

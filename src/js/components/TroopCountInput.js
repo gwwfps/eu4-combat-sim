@@ -1,5 +1,7 @@
-import {input} from '../utils/dom.js';
+import {input} from '../lib/dom.js';
+
 var React = require('react');
+
 
 export default React.createClass({
   render() {

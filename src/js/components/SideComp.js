@@ -1,5 +1,5 @@
-import {div, fieldset, legend, label} from '../utils/dom.js';
-import {compToEl} from '../utils/helpers.js';
+import {div, fieldset, legend, label} from '../lib/dom.js';
+import {compToEl} from '../lib/utils.js';
 
 import TroopCountInput from './TroopCountInput.js';
 
