@@ -15,8 +15,8 @@ export default React.createClass({
         compToEl(SimulationSetup)
       ),
       div({ className: 'row' },
-        compToEl(ArmySide, { sideName: 'Attackers' }),
-        compToEl(ArmySide, { sideName: 'Defenders' })
+        compToEl(ArmySide, { sideName: 'Attackers', sideClass: 'attackers' }),
+        compToEl(ArmySide, { sideName: 'Defenders', sideClass: 'defenders' })
       )
     );
   }

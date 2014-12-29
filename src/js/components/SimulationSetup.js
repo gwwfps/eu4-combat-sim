@@ -9,7 +9,7 @@ export default React.createClass({
   render() {
     return gf(
       gfSubform('Simulation Setup',
-        gfRow(
+        gfRow(5,
           gfField('No. of runs',
             compToEl(AutoUpdateInput, {
               required: true,
@@ -18,7 +18,8 @@ export default React.createClass({
               max: 100000,
               step: 1000
             })
-          )
+          ),
+          gfField('Terrain')
         )
       )
     );

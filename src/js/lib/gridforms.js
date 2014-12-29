@@ -8,8 +8,12 @@ export const gf = (...args) => {
   return div({ className: 'grid-form' }, ...args);
 };
 
-export const gfSubform = (title, ...rows) => {
-  return fieldset(legend(title), ...rows);
+export const gfSubform = (...rows) => {
+  if (rows.length && _.isString(rows[0])) {
+    rows[0] = legend(rows[0]);
+  }
+
+  return fieldset(...rows);
 };
 
 export const gfRow = (...fields) => {

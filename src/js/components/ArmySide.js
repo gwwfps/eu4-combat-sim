@@ -1,9 +1,8 @@
-import {h4, div} from '../lib/dom.js';
+import {h4, div, input} from '../lib/dom.js';
 import {compToEl} from '../lib/utils.js';
-import {gf} from '../lib/gridforms.js';
+import {gf, gfSubform, gfRow, gfField} from '../lib/gridforms.js';
 
-import SideTech from './SideTech.js';
-import SideComp from './SideComp.js';
+import ArmyComp from './ArmyComp.js';
 
 var React = require('react');
 
@@ -18,11 +17,44 @@ export default React.createClass({
     };
   },
   render() {
-    return div({ className: 'one-half column' },
-      h4(this.props.sideName),
+    return div({ className: 'one-half column ' + this.props.sideClass },
       gf(
-        compToEl(SideTech),
-        compToEl(SideComp)
+        gfSubform(this.props.sideName,
+          gfRow( 
+            gfField('Tech group',
+              input({ 'type': 'text' })        
+            ),
+            gfField('Calvary support ratio',
+              input({ 'type': 'text' })
+            )
+          ),
+          gfRow( 
+            gfField('Discipline (%)',
+              input({ 'type': 'text' })        
+            ),
+            gfField('Morale',
+              input({ 'type': 'text' })
+            ),
+            gfField('Tactics',
+              input({ 'type': 'text' })
+            ),
+            gfField('Combat Width',
+              input({ 'type': 'text' })
+            )
+          ),
+          gfRow(
+            gfField('Infantry combat ability (%)',
+              input({ 'type': 'text' })
+            ),
+            gfField('Calvary combat ability (%)',
+              input({ 'type': 'text' })
+            ),
+            gfField('Artillery combat ability (%)',
+              input({ 'type': 'text' })
+            )
+          )
+        ),
+        compToEl(ArmyComp)
       )
     );
   }

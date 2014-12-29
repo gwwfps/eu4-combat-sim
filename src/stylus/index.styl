@@ -3,12 +3,45 @@
 
 body
   color BASE01
-
-.well
   background BASE06
+
+army-side(color)
+  color color
+  .grid-form
+    fieldset legend
+      color color
+      border-bottom-color color
+    [data-row-span]
+      border-bottom-color color
+      [data-field-span]
+        border-right-color color
+        label:first-child
+          color color
+
+.attackers
+  army-side(ATTACKERS)
+
+.defenders
+  army-side(DEFENDERS)
+
+.comp
+  background BASE0A
+  padding 1em
 
 .grid-form
   fieldset legend
     margin-bottom 0
   [data-row-span] [data-field-span]:hover
     background BASE07
+  select
+    height auto
+    background transparent
+    border none
+  button
+    border-radius 0
+    line-height 1.5
+    background BASE07
+    padding 0 1.5em
+    height auto
+    margin-bottom 0
+
