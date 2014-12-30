@@ -1,7 +1,7 @@
 import {input} from '../lib/dom.js';
 
-var React = require('react/addons');
-var _ = require('lodash');
+const React = require('react/addons');
+const _ = require('lodash');
 
 
 export default React.createClass({

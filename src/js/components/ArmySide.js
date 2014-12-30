@@ -4,7 +4,7 @@ import {gf, gfSubform, gfRow, gfField} from '../lib/gridforms.js';
 
 import ArmyComp from './ArmyComp.js';
 
-var React = require('react');
+const React = require('react');
 
 
 export default React.createClass({
@@ -16,10 +16,15 @@ export default React.createClass({
       combatWidth: 50
     };
   },
+
+  _getSideLowerCase() {
+    return this.props.side.toLowerCase();
+  },
+
   render() {
-    return div({ className: 'one-half column ' + this.props.sideClass },
+    return div({ className: 'one-half column ' + this._getSideLowerCase() },
       gf(
-        gfSubform(this.props.sideName,
+        gfSubform(this._getSideLowerCase(),
           gfRow( 
             gfField('Tech group',
               input({ 'type': 'text' })        
@@ -54,7 +59,7 @@ export default React.createClass({
             )
           )
         ),
-        compToEl(ArmyComp)
+        compToEl(ArmyComp, { side: this.props.side })
       )
     );
   }

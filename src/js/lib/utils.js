@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var React = require('react');
+const _ = require('lodash');
+const React = require('react');
 
 
 export const shiftProps = (args) => {
@@ -13,4 +13,9 @@ export const shiftProps = (args) => {
 export const compToEl = (ComponentClass, ...children) => {
   var props = shiftProps(children);
   return React.createElement(ComponentClass, props || {}, ...children);
+};
+
+export const shimClass = (cls) => {
+  ($traceurRuntime.createClass)(cls, cls.prototype, {});
+  return cls;
 };

@@ -1,7 +1,9 @@
-var Dispatcher = require('flux').Dispatcher;
-($traceurRuntime.createClass)(Dispatcher, Dispatcher.prototype, {});
+import {shimClass} from './lib/utils.js';
+
+const Dispatcher = shimClass(require('flux').Dispatcher);
+
 
 class AppDispatcher extends Dispatcher {
 }
 
-export default const dispatcher = new AppDispatcher();
+export default new AppDispatcher();

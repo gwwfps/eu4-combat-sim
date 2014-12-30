@@ -1,17 +1,17 @@
 import {shiftProps} from './utils.js'
 
-var React = require('react');
+const React = require('react');
 
 
 // JS equivalent of github.com/atom/reactionary
 const DOM = React.DOM;
 
-var tag = (name, ...args) => {
-  var attributes = shiftProps(args);
+const tag = (name, ...args) => {
+  const attributes = shiftProps(args);
   return DOM[name](attributes, ...args);
 };
 
-var bindTag = (name) => {
+const bindTag = (name) => {
   return tag.bind(this, name);
 };
 

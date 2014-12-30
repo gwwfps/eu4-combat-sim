@@ -3,7 +3,7 @@ import {compToEl} from './lib/utils.js';
 
 import CombatSimulator from './components/CombatSimulator.js';
 
-var React = require('react');
+const React = require('react');
 
 
 React.render(compToEl(CombatSimulator), document.getElementById('main'));

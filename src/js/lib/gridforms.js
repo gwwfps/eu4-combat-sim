@@ -1,6 +1,7 @@
 import {div, fieldset, legend, label} from './dom.js'
+import {shiftProps} from './utils.js';
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 
 // gridforms shorthands
@@ -9,14 +10,18 @@ export const gf = (...args) => {
 };
 
 export const gfSubform = (...rows) => {
+  const props = shiftProps(rows);
+
   if (rows.length && _.isString(rows[0])) {
     rows[0] = legend(rows[0]);
   }
 
-  return fieldset(...rows);
+  return fieldset(props, ...rows);
 };
 
 export const gfRow = (...fields) => {
+  const props = shiftProps(fields);
+
   var total;
   if (fields.length && _.isNumber(fields[0])) {
     total = fields.shift();
@@ -28,10 +33,14 @@ export const gfRow = (...fields) => {
     }).value();
   }
 
-  return div({ 'data-row-span': total }, ...fields);
+  props['data-row-span'] = total;
+
+  return div(props, ...fields);
 };
 
 export const gfField = (...children) => {
+  const props = shiftProps(children);
+
   var span = 1;
   if (children.length && _.isNumber(children[0])) {
     span = children.shift();
@@ -41,5 +50,7 @@ export const gfField = (...children) => {
     children[0] = label(children[0]);
   }
 
-  return div({ 'data-field-span': span }, ...children);
+  props['data-field-span'] = span;
+
+  return div(props, ...children);
 };

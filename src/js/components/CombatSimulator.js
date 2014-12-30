@@ -1,10 +1,11 @@
 import {h1, div} from '../lib/dom.js';
 import {compToEl} from '../lib/utils.js';
+import {Side} from '../constants.js';
 
 import ArmySide from './ArmySide.js';
 import SimulationSetup from './SimulationSetup.js';
 
-var React = require('react');
+const React = require('react');
 
 
 export default React.createClass({
@@ -15,8 +16,8 @@ export default React.createClass({
         compToEl(SimulationSetup)
       ),
       div({ className: 'row' },
-        compToEl(ArmySide, { sideName: 'Attackers', sideClass: 'attackers' }),
-        compToEl(ArmySide, { sideName: 'Defenders', sideClass: 'defenders' })
+        compToEl(ArmySide, { side: Side.ATTACKERS }),
+        compToEl(ArmySide, { side: Side.DEFENDERS })
       )
     );
   }
