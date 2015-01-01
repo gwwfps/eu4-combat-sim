@@ -19,7 +19,8 @@ export default React.createClass({
               step: 1000
             })
           ),
-          gfField('Terrain')
+          gfField('Terrain'),
+          gfField('River crossing')
         )
       )
     );
