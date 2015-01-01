@@ -6,8 +6,12 @@ const constantsObject = (...names) => {
   return constants;
 };
 
-export const Side = constantsObject(
+export const Sides = constantsObject(
   'ATTACKERS', 'DEFENDERS'
+);
+
+export const UnitTypes = constantsObject(
+  'INFANTRY', 'CAVALRY', 'ARTILLERY'
 );
 
 export const ActionTypes = constantsObject(

@@ -1,4 +1,4 @@
-import {ActionTypes, Side} from '../constants.js';
+import {ActionTypes, Sides} from '../constants.js';
 import dispatcher from '../dispatcher.js';
 import ChangeEmitter from '../lib/ChangeEmitter.js';
 
@@ -8,8 +8,8 @@ const _ = require('lodash');
 class CompStore extends ChangeEmitter {
   constructor() {
     this.sides = {};
-    this.sides[Side.ATTACKERS] = {};
-    this.sides[Side.DEFENDERS] = {};
+    this.sides[Sides.ATTACKERS] = {};
+    this.sides[Sides.DEFENDERS] = {};
   }
 
   getSide(side) {

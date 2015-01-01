@@ -1,4 +1,4 @@
-import {div, span} from '../lib/dom.js';
+import {div, span, label, abbr} from '../lib/dom.js';
 import {gfSubform, gfRow, gfField} from '../lib/gridforms.js';
 import {compToEl} from '../lib/utils.js';
 
@@ -28,12 +28,25 @@ export default React.createClass({
       );
     });
 
+    const pipLabel = (name) => {
+      const initials = name.split(' ').map((word) => {
+        return word[0];
+      }).join('');
+      return label(abbr({ title: `${name} pips` }, initials));
+    };
+
     return div({ className: 'comp' },
       gfSubform('Composition',
-        gfRow(5,
-          gfField(3, 'Type'),
-          gfField(1, 'Count'),
-          gfField(1, 'Add/remove')
+        gfRow(12,
+          gfField(2, 'Type'),
+          gfField(1, pipLabel('Offensive Fire')),
+          gfField(1, pipLabel('Defensive Fire')),
+          gfField(1, pipLabel('Offensive Shock')),
+          gfField(1, pipLabel('Defensive Shock')),
+          gfField(1, pipLabel('Offensive Morale')),
+          gfField(1, pipLabel('Defensive Morale')),
+          gfField(2, 'Count'),
+          gfField(2, '')
         ),
         troops.length ? troops : gfRow(gfField(span('Add troops below to compose army...'))),
         compToEl(ArmyCompAddUnit, { side: this.props.side }),
@@ -48,11 +61,11 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    CompStore.addChangeListener(this._onChange);    
+    CompStore.addChangeListener(this._onChange);
   },
 
   componentWillUnmount() {
-    CompStore.removeChangeListener(this._onChange);    
+    CompStore.removeChangeListener(this._onChange);
   },
 
   _onChange() {
