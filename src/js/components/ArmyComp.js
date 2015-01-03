@@ -1,11 +1,13 @@
 import {div, span, label, abbr} from '../lib/dom.js';
 import {gfSubform, gfRow, gfField} from '../lib/gridforms.js';
-import {compToEl} from '../lib/utils.js';
+import {compToEl, abbreviate, capitalize} from '../lib/utils.js';
 
+import {UnitTypes} from '../constants.js';
 import CompStore from '../stores/CompStore.js';
 import ArmyCompAddUnit from './ArmyCompAddUnit.js';
 
 const React = require('react');
+const _ = require('lodash');
 
 
 export default React.createClass({
@@ -19,11 +21,30 @@ export default React.createClass({
     return this._getStateFromStore();
   },
 
+  _sumTroopTotal(type) {
+    var troops = this.state.troops;
+    if (type) {
+      troops = _.filter(troops, { type });
+    }
+
+    if (!troops.length) {
+      return 0;
+    }
+
+    return _.reduce(_.pluck(troops, 'count'), (sum, num) => { return sum + num; });
+  },
+
   render() {
     const troops = this.state.troops.map((unit) => {
-      return gfRow({ key: unit.name }, 5,
-        gfField(3, span(unit.name)),
-        gfField(1, unit.count),
+      return gfRow({ key: unit.key }, 12,
+        gfField(2, span(capitalize(abbreviate(unit.type)))),
+        gfField(1, unit.offFire),
+        gfField(1, unit.defFire),
+        gfField(1, unit.offShock),
+        gfField(1, unit.defShock),
+        gfField(1, unit.offMorale),
+        gfField(1, unit.defMorale),
+        gfField(2, unit.count),
         gfField(1)
       );
     });
@@ -51,10 +72,10 @@ export default React.createClass({
         troops.length ? troops : gfRow(gfField(span('Add troops below to compose army...'))),
         compToEl(ArmyCompAddUnit, { side: this.props.side }),
         gfRow(
-          gfField('Infantry'),
-          gfField('Calvary'),
-          gfField('Artillery'),
-          gfField('Grand total')
+          gfField(UnitTypes.INFANTRY, this._sumTroopTotal(UnitTypes.INFANTRY)),
+          gfField(UnitTypes.CAVALRY, this._sumTroopTotal(UnitTypes.CAVALRY)),
+          gfField(UnitTypes.ARTILLERY, this._sumTroopTotal(UnitTypes.ARTILLERY)),
+          gfField('Total', this._sumTroopTotal())
         )
       )
     );

@@ -32,8 +32,13 @@ army-side(color)
   fieldset legend
     text-transform capitalize
     margin-bottom 0
-  [data-row-span] [data-field-span]:hover
-    background BASE07
+  [data-row-span] [data-field-span]
+    overflow-x hidden
+    &:hover
+      background BASE07
+    &.pip
+      cursor pointer
+      user-select none
   select, input, button
     height auto
   select

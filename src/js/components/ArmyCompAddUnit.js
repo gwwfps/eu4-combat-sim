@@ -1,5 +1,6 @@
-import {button, input, select, option} from '../lib/dom.js';
+import {button, input, select, option, span} from '../lib/dom.js';
 import {gfRow, gfField} from '../lib/gridforms.js';
+import {capitalize, abbreviate} from '../lib/utils.js';
 
 import {UnitTypes} from '../constants.js';
 import CompActions from '../actions/CompActions.js';
@@ -26,35 +27,47 @@ export default React.createClass({
 
   render() {
     const pipInput = (stateField) => {
-      return input({ valueLink: this.linkState(stateField), className: 'pip', type: 'number', min: 0, max: 6 });
+      return gfField({ onClick: _.bind(this._onClickPip, this, stateField), className: 'pip' }, 1,
+        span(this.state[stateField])
+      );
     };
 
     const unitTypeOptions = _.values(UnitTypes).map((unitType) => {
-      return option(unitType.substring(0, 1) + unitType.substring(1, 3).toLowerCase() + '.');
+      return option({ value: unitType }, capitalize(abbreviate(unitType)));
     });
 
     return gfRow(12,
       gfField(2,
         select({ valueLink: this.linkState('type') }, ...unitTypeOptions)
       ),
-      gfField(1, pipInput('offFire')),
-      gfField(1, pipInput('defFire')),
-      gfField(1, pipInput('offShock')),
-      gfField(1, pipInput('defShock')),
-      gfField(1, pipInput('offMorale')),
-      gfField(1, pipInput('defMorale')),
+      pipInput('offFire'),
+      pipInput('defFire'),
+      pipInput('offShock'),
+      pipInput('defShock'),
+      pipInput('offMorale'),
+      pipInput('defMorale'),
       gfField(2,
         input({ valueLink: this.linkState('count'), type: 'number', min: 0, max: 1000000, step: 1000 })
       ),
       gfField(2,
-        button({ onClick: this._onClick },
+        button({ onClick: this._onClickAdd },
           'Add'
         )
       )
     );
   },
 
-  _onClick() {
+  _onClickPip(stateField) {
+    const toUpdate = {};
+    var newPip = this.state[stateField] + 1;
+    if (newPip > 6) {
+      newPip = 0;
+    }
+    toUpdate[stateField] = newPip;
+    this.setState(toUpdate);
+  },
+
+  _onClickAdd() {
     const count = parseInt(this.state.count, 10);
     if (_.isNaN(count)) {
       return;

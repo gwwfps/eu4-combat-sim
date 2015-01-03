@@ -81,6 +81,10 @@ export default React.createClass({
             gfField('Artillery +shock',
               input({ valueLink: this.linkState('artShock'), type: 'number', min: 0, max: 10, step: 0.01 })
             )
+          ),
+          gfRow(
+            gfField('General Fire'),
+            gfField('General Shock')
           )
         ),
         compToEl(ArmyComp, { side: this.props.side })

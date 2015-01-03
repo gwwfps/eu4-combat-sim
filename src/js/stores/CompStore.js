@@ -5,6 +5,8 @@ import ChangeEmitter from '../lib/ChangeEmitter.js';
 const _ = require('lodash');
 
 
+const unitCache = {};
+
 class CompStore extends ChangeEmitter {
   constructor() {
     this.sides = {};
@@ -13,20 +15,30 @@ class CompStore extends ChangeEmitter {
   }
 
   getSide(side) {
-    return _.map(this.sides[side], (count, name) => {
-      return { count, name };
+    return _.map(this.sides[side], (count, unitKey) => {
+      return _.extend({}, unitCache[unitKey], { count, key: unitKey });
     });
   }
 
   addUnit(unit) {
     const side = this.sides[unit.side];
-    if (!side.hasOwnProperty(unit.name)) {
-      side[unit.name] = 0;
+
+    const unitKey = this._cacheUnit(unit);
+
+    if (!side.hasOwnProperty(unitKey)) {
+      side[unitKey] = 0;
     }
-    side[unit.name] = side[unit.name] + unit.count;
-    if (side[unit.name] <= 0) {
-      delete side[unit.name];
+    side[unitKey] = side[unitKey] + unit.count;
+    if (side[unitKey] <= 0) {
+      delete side[unitKey];
     }
+  }
+
+  _cacheUnit(unit) {
+    const realUnit = _.pick(unit, ['type', 'offFire', 'defFire', 'offShock', 'defShock', 'offMorale', 'defMorale']);
+    const unitKey = _.values(realUnit).join('-');
+    unitCache[unitKey] = realUnit;
+    return unitKey;
   }
 }
 
