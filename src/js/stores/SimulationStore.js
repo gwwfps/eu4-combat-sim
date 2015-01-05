@@ -1,4 +1,5 @@
 import {ActionTypes, Sides} from '../constants.js';
+import {serializeToLocalStorage, deserializeFromLocalStorage} from '../lib/utils.js';
 import dispatcher from '../dispatcher.js';
 import ChangeEmitter from '../lib/ChangeEmitter.js';
 
@@ -36,12 +37,17 @@ const _defaultSide = () => {
   };
 };
 
+const _defaultSides = () => {
+  var sides = {};
+  sides[Sides.ATTACKERS] = _defaultSide();
+  sides[Sides.DEFENDERS] = _defaultSide();
+  return sides;
+};
+
 class SimulationStore extends ChangeEmitter {
   constructor() {
-    this.setup = _defaultSetup();
-    this.sides = {};
-    this.sides[Sides.ATTACKERS] = _defaultSide();
-    this.sides[Sides.DEFENDERS] = _defaultSide();
+    this.setup = deserializeFromLocalStorage('setup') || _defaultSetup();
+    this.sides = deserializeFromLocalStorage('sides') || _defaultSides();
   }
 
   getSetupFields() {
@@ -50,6 +56,7 @@ class SimulationStore extends ChangeEmitter {
 
   updateSetupFields(fields) {
     _.extend(this.setup, fields);
+    serializeToLocalStorage('setup', this.setup);
   }
 
   getSideFields(side) {
@@ -58,6 +65,7 @@ class SimulationStore extends ChangeEmitter {
 
   updateSideFields(side, fields) {
     _.extend(this.sides[side], fields);
+    serializeToLocalStorage('sides', this.sides);
   }
 }
 

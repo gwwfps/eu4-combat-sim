@@ -30,3 +30,12 @@ export const capitalize = (text, lowerAll = true) => {
 export const abbreviate = (text, length = 3) => {
   return text.length > length ? (text.substring(0, 3) + '.') : text;
 };
+
+export const serializeToLocalStorage = (key, obj) => {
+  localStorage.setItem(key, JSON.stringify(obj));
+};
+
+export const deserializeFromLocalStorage = (key) => {
+  const json = localStorage.getItem(key);
+  return json && JSON.parse(json);
+};

@@ -1,22 +1,26 @@
 import {ActionTypes, Sides} from '../constants.js';
+import {serializeToLocalStorage, deserializeFromLocalStorage} from '../lib/utils.js';
 import dispatcher from '../dispatcher.js';
 import ChangeEmitter from '../lib/ChangeEmitter.js';
 
 const _ = require('lodash');
 
 
-const unitCache = {};
+const _unitCache = deserializeFromLocalStorage('_unitCache') || {};
 
 class CompStore extends ChangeEmitter {
   constructor() {
-    this.sides = {};
-    this.sides[Sides.ATTACKERS] = {};
-    this.sides[Sides.DEFENDERS] = {};
+    this.sides = deserializeFromLocalStorage('compSides');
+    if (!this.sides) {
+      this.sides = {};
+      this.sides[Sides.ATTACKERS] = {};
+      this.sides[Sides.DEFENDERS] = {};
+    }
   }
 
   getSide(side) {
     return _.map(this.sides[side], (count, unitKey) => {
-      return _.extend({}, unitCache[unitKey], { count, key: unitKey });
+      return _.extend({}, _unitCache[unitKey], { count, key: unitKey });
     });
   }
 
@@ -32,12 +36,15 @@ class CompStore extends ChangeEmitter {
     if (side[unitKey] <= 0) {
       delete side[unitKey];
     }
+
+    serializeToLocalStorage('compSides', this.sides);
   }
 
   _cacheUnit(unit) {
     const realUnit = _.pick(unit, ['type', 'offFire', 'defFire', 'offShock', 'defShock', 'offMorale', 'defMorale']);
     const unitKey = _.values(realUnit).join('-');
-    unitCache[unitKey] = realUnit;
+    _unitCache[unitKey] = realUnit;
+    serializeToLocalStorage('_unitCache', _unitCache);
     return unitKey;
   }
 }

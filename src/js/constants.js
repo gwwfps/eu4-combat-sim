@@ -6,6 +6,8 @@ const constantsObject = (...names) => {
   return constants;
 };
 
+export const VERSION = '0.1';
+
 export const Sides = constantsObject(
   'ATTACKERS', 'DEFENDERS'
 );
