@@ -3,20 +3,21 @@ import {compToEl} from '../lib/utils.js';
 import {gf, gfSubform, gfRow, gfField} from '../lib/gridforms.js';
 
 import ArmyComp from './ArmyComp.js';
+import SimulationActions from '../actions/SimulationActions.js';
+import SimulationStore from '../stores/SimulationStore.js';
 
 const React = require('react/addons');
 
+
+const _getStateFromStore = (side) => {
+  return SimulationStore.getSideFields(side);
+};
 
 export default React.createClass({
   mixins: [React.addons.LinkedStateMixin],
 
   getInitialState() {
-    return {
-      discipline: 120,
-      morale: 5.5,
-      tactics: 2.5,
-      combatWidth: 50
-    };
+    return _getStateFromStore(this.props.side);
   },
 
   _getSideLowerCase() {
@@ -83,12 +84,22 @@ export default React.createClass({
             )
           ),
           gfRow(
-            gfField('General Fire'),
-            gfField('General Shock')
+            gfField('General Fire',
+              input({ valueLink: this.linkState('genFire'), type: 'number', min: 0, max: 6 })
+            ),
+            gfField('General Shock',
+              input({ valueLink: this.linkState('genShock'), type: 'number', min: 0, max: 6 })
+            )
           )
         ),
         compToEl(ArmyComp, { side: this.props.side })
       )
     );
+  },
+
+  componentWillUpdate(nextProps, nextState) {
+    if (this.state !== nextState) {
+      SimulationActions.updateSideFields(nextProps.side, nextState);
+    }
   }
 });
