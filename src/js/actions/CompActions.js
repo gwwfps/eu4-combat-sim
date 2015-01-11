@@ -8,5 +8,12 @@ export default {
       actionType: ActionTypes.COMP_ADD_UNIT,
       unit: unit
     });
+  },
+
+  removeUnit(unit) {
+    dispatcher.dispatch({
+      actionType: ActionTypes.COMP_REMOVE_UNIT,
+      unit: unit
+    })
   }
 }

@@ -17,5 +17,6 @@ export const UnitTypes = constantsObject(
 );
 
 export const ActionTypes = constantsObject(
-  'COMP_ADD_UNIT', 'UPDATE_SETUP_FIELDS', 'UPDATE_SIDE_FIELDS'
+  'COMP_ADD_UNIT', 'COMP_REMOVE_UNIT',
+  'UPDATE_SETUP_FIELDS', 'UPDATE_SIDE_FIELDS'
 );

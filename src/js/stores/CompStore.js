@@ -40,6 +40,12 @@ class CompStore extends ChangeEmitter {
     serializeToLocalStorage('compSides', this.sides);
   }
 
+  removeUnit(unit) {
+    const side = this.sides[unit.side];
+    const unitKey = this._cacheUnit(unit);
+    delete side[unitKey];
+  }
+
   _cacheUnit(unit) {
     const realUnit = _.pick(unit, ['type', 'offFire', 'defFire', 'offShock', 'defShock', 'offMorale', 'defMorale']);
     const unitKey = _.values(realUnit).join('-');
@@ -56,6 +62,11 @@ instance.dispatchToken = dispatcher.register((payload) => {
   switch(payload.actionType) {
     case ActionTypes.COMP_ADD_UNIT:
       instance.addUnit(payload.unit);
+      instance.emitChange();
+      break;
+
+    case ActionTypes.COMP_REMOVE_UNIT:
+      instance.removeUnit(payload.unit);
       instance.emitChange();
       break;
   }

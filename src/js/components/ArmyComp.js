@@ -1,8 +1,9 @@
-import {div, span, label, abbr} from '../lib/dom.js';
+import {div, span, label, abbr, button} from '../lib/dom.js';
 import {gfSubform, gfRow, gfField} from '../lib/gridforms.js';
 import {compToEl, abbreviate, capitalize} from '../lib/utils.js';
 
 import {UnitTypes} from '../constants.js';
+import CompActions from '../actions/CompActions.js';
 import CompStore from '../stores/CompStore.js';
 import ArmyCompAddUnit from './ArmyCompAddUnit.js';
 
@@ -45,7 +46,7 @@ export default React.createClass({
         gfField(1, unit.offMorale),
         gfField(1, unit.defMorale),
         gfField(2, unit.count),
-        gfField(1)
+        gfField(1, button({ onClick: _.bind(this._onClickRemove, this, unit) }, 'X'))
       );
     });
 
@@ -67,7 +68,7 @@ export default React.createClass({
           gfField(1, pipLabel('Offensive Morale')),
           gfField(1, pipLabel('Defensive Morale')),
           gfField(2, 'Count'),
-          gfField(2, '')
+          gfField(2)
         ),
         troops.length ? troops : gfRow(gfField(span('Add troops below to compose army...'))),
         compToEl(ArmyCompAddUnit, { side: this.props.side }),
@@ -79,6 +80,10 @@ export default React.createClass({
         )
       )
     );
+  },
+
+  _onClickRemove(unit) {
+    CompActions.removeUnit(_.extend({}, unit, { side: this.props.side }));
   },
 
   componentDidMount() {
