@@ -16,5 +16,11 @@ export default {
       side: side,
       fields: fields
     });
+  },
+
+  startSimulation() {
+    dispatcher.dispatch({
+      actionType: ActionTypes.START_SIMULATION
+    })
   }
 }

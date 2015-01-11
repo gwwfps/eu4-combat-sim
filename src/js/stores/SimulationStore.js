@@ -3,6 +3,9 @@ import {serializeToLocalStorage, deserializeFromLocalStorage} from '../lib/utils
 import dispatcher from '../dispatcher.js';
 import ChangeEmitter from '../lib/ChangeEmitter.js';
 
+import {MAX_WORKERS, WORKER_SCRIPT, WORKER_TIMEOUT} from '../constants.js';
+import CompStore from './CompStore.js';
+
 const _ = require('lodash');
 
 
@@ -50,12 +53,20 @@ class SimulationStore extends ChangeEmitter {
     this.sides = deserializeFromLocalStorage('sides') || _defaultSides();
   }
 
+  _parseFields(fields) {
+    _.each(fields, (value, key) => {
+      if (_.isString(value)) {
+        fields[key] = parseFloat(value);
+      }
+    });
+  }
+
   getSetupFields() {
     return _.extend({}, this.setup);
   }
 
   updateSetupFields(fields) {
-    _.extend(this.setup, fields);
+    this._parseFields(_.extend(this.setup, fields));
     serializeToLocalStorage('setup', this.setup);
   }
 
@@ -64,8 +75,39 @@ class SimulationStore extends ChangeEmitter {
   }
 
   updateSideFields(side, fields) {
-    _.extend(this.sides[side], fields);
+    this._parseFields(_.extend(this.sides[side], fields));
     serializeToLocalStorage('sides', this.sides);
+  }
+
+  startSimulation() {
+    return new Promise(_.bind((resolve, reject) => {
+      var sides = _.cloneDeep(this.sides);
+      _.each(sides, (side, name) => {
+        return CompStore.getSide(name);
+      });
+
+      var results = [];
+      const resultHandler = _.bind((evt) => {
+        results.push(evt.data);
+        if (results.length === this.setup.numOfRuns) {
+          resolve(results);
+        }
+      }, this);
+
+      const workers = _.times(MAX_WORKERS, () => {
+        var worker = new Worker(WORKER_SCRIPT);
+        worker.onmessage = resultHandler;
+        return worker;
+      });
+
+      _.times(this.setup.numOfRuns, (i) => {
+        workers[i % MAX_WORKERS].postMessage(sides);
+      });
+
+      _.delay(() => {
+        reject();
+      }, WORKER_TIMEOUT);
+    }, this));
   }
 }
 
@@ -79,6 +121,11 @@ instance.dispatchToken = dispatcher.register((payload) => {
       break;
     case ActionTypes.UPDATE_SIDE_FIELDS:
       instance.updateSideFields(payload.side, payload.fields);
+      break;
+    case ActionTypes.START_SIMULATION:
+      instance.startSimulation().then((results) => {
+        console.log(results);
+      });
       break;
   }
 

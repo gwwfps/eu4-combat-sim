@@ -11,6 +11,7 @@ var source = require('vinyl-source-stream');
 var path = {
   js: './src/js/**/*.js',
   jsEntry: './src/js/index.js',
+  jsWorkerEntry: './src/js/simrunner.js',
   jade: './src/jade/**/*.jade',
   styl: './src/stylus/**/*.styl',
   stylEntry: './src/stylus/index.styl',
@@ -36,17 +37,26 @@ gulp.task('stylus', function () {
     .pipe(connect.reload());
 });
 
-gulp.task('browserify', function() {
-  browserify({ debug: true })
+var makeBundle = function(entryPoint) {
+  return browserify({ debug: true, insertGlobalVars: ['onmessage', 'postMessage'] })
     .add(es6ify.runtime)
-    .require(require.resolve(path.jsEntry), { entry: true })
+    .require(require.resolve(entryPoint), { entry: true })
     .transform(es6ify.configure(/^(?!.*node_modules)+.+\.js$/))
     .bundle()
     .on('error', function(err) {
       console.log(err.message);
       this.end();
-    })
+    });
+};
+
+gulp.task('browserify', function() {
+  makeBundle(path.jsEntry)
     .pipe(source('bundle.js'))
+    .pipe(gulp.dest(path.dist))
+    .pipe(connect.reload());
+
+  makeBundle(path.jsWorkerEntry)
+    .pipe(source('worker.js'))
     .pipe(gulp.dest(path.dist))
     .pipe(connect.reload());
 });
