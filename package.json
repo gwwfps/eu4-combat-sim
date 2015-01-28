@@ -17,8 +17,8 @@
     "nib": "~1.0.4"
   },
   "dependencies": {
+    "lodash": "~3.0.0",
     "react": "~0.12.1",
-    "lodash": "~2.4.1",
-    "flux": "~2.0.1"
+    "reflux": "^0.2.4"
   }
 }

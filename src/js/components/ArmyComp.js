@@ -8,10 +8,13 @@ import CompStore from '../stores/CompStore.js';
 import ArmyCompAddUnit from './ArmyCompAddUnit.js';
 
 const React = require('react');
+const Reflux = require('reflux');
 const _ = require('lodash');
 
 
 export default React.createClass({
+  mixins: [Reflux.ListenerMixin],
+
   _getStateFromStore() {
     return {
       troops: CompStore.getSide(this.props.side)
@@ -87,11 +90,7 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    CompStore.addChangeListener(this._onChange);
-  },
-
-  componentWillUnmount() {
-    CompStore.removeChangeListener(this._onChange);
+    this.listenTo(CompStore, this._onChange);
   },
 
   _onChange() {

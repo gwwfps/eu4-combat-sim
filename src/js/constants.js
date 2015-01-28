@@ -19,9 +19,3 @@ export const Sides = constantsObject(
 export const UnitTypes = constantsObject(
   'INFANTRY', 'CAVALRY', 'ARTILLERY'
 );
-
-export const ActionTypes = constantsObject(
-  'COMP_ADD_UNIT', 'COMP_REMOVE_UNIT',
-  'START_SIMULATION',
-  'UPDATE_SETUP_FIELDS', 'UPDATE_SIDE_FIELDS'
-);

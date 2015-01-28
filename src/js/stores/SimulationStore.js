@@ -1,12 +1,12 @@
-import {ActionTypes, Sides} from '../constants.js';
+import {Sides} from '../constants.js';
 import {serializeToLocalStorage, deserializeFromLocalStorage} from '../lib/utils.js';
-import dispatcher from '../dispatcher.js';
-import ChangeEmitter from '../lib/ChangeEmitter.js';
 
 import {MAX_WORKERS, WORKER_SCRIPT, WORKER_TIMEOUT} from '../constants.js';
 import CompStore from './CompStore.js';
+import SimulationActions from '../actions/SimulationActions.js';
 
 const _ = require('lodash');
+const Reflux = require('reflux');
 
 
 const _defaultSetup = () => {
@@ -47,11 +47,15 @@ const _defaultSides = () => {
   return sides;
 };
 
-class SimulationStore extends ChangeEmitter {
-  constructor() {
+export default Reflux.createStore({
+  init() {
     this.setup = deserializeFromLocalStorage('setup') || _defaultSetup();
     this.sides = deserializeFromLocalStorage('sides') || _defaultSides();
-  }
+
+    this.listenTo(SimulationActions.updateSetupFields, this.updateSetupFields);
+    this.listenTo(SimulationActions.updateSideFields, this.updateSideFields);
+    this.listenTo(SimulationActions.startSimulation, this.startSimulation);
+  },
 
   _parseFields(fields) {
     _.each(fields, (value, key) => {
@@ -59,75 +63,58 @@ class SimulationStore extends ChangeEmitter {
         fields[key] = parseFloat(value);
       }
     });
-  }
+  },
 
   getSetupFields() {
     return _.extend({}, this.setup);
-  }
+  },
 
   updateSetupFields(fields) {
     this._parseFields(_.extend(this.setup, fields));
     serializeToLocalStorage('setup', this.setup);
-  }
+  },
 
   getSideFields(side) {
     return _.extend({}, this.sides[side]);
-  }
+  },
 
   updateSideFields(side, fields) {
     this._parseFields(_.extend(this.sides[side], fields));
     serializeToLocalStorage('sides', this.sides);
-  }
+  },
 
   startSimulation() {
-    return new Promise(_.bind((resolve, reject) => {
-      var sides = _.cloneDeep(this.sides);
-      _.each(sides, (side, name) => {
-        return CompStore.getSide(name);
-      });
+    return new Promise(this._resolveSimulation).then((result) => {
+      console.log(result);
+    });
+  },
 
-      var results = [];
-      const resultHandler = _.bind((evt) => {
-        results.push(evt.data);
-        if (results.length === this.setup.numOfRuns) {
-          resolve(results);
-        }
-      }, this);
+  _resolveSimulation(resolve, reject) {
+    var sides = _.cloneDeep(this.sides);
+    _.each(sides, (side, name) => {
+      return CompStore.getSide(name);
+    });
 
-      const workers = _.times(MAX_WORKERS, () => {
-        var worker = new Worker(WORKER_SCRIPT);
-        worker.onmessage = resultHandler;
-        return worker;
-      });
+    var results = [];
+    const resultHandler = _.bind((evt) => {
+      results.push(evt.data);
+      if (results.length === this.setup.numOfRuns) {
+        resolve(results);
+      }
+    }, this);
 
-      _.times(this.setup.numOfRuns, (i) => {
-        workers[i % MAX_WORKERS].postMessage(sides);
-      });
+    const workers = _.times(MAX_WORKERS, () => {
+      var worker = new Worker(WORKER_SCRIPT);
+      worker.onmessage = resultHandler;
+      return worker;
+    });
 
-      _.delay(() => {
-        reject();
-      }, WORKER_TIMEOUT);
-    }, this));
+    _.times(this.setup.numOfRuns, (i) => {
+      workers[i % MAX_WORKERS].postMessage(sides);
+    });
+
+    _.delay(() => {
+      reject();
+    }, WORKER_TIMEOUT);
   }
-}
-
-const instance = new SimulationStore();
-export default instance;
-
-instance.dispatchToken = dispatcher.register((payload) => {
-  switch(payload.actionType) {
-    case ActionTypes.UPDATE_SETUP_FIELDS:
-      instance.updateSetupFields(payload.fields);
-      break;
-    case ActionTypes.UPDATE_SIDE_FIELDS:
-      instance.updateSideFields(payload.side, payload.fields);
-      break;
-    case ActionTypes.START_SIMULATION:
-      instance.startSimulation().then((results) => {
-        console.log(results);
-      });
-      break;
-  }
-
-  return true;
 });

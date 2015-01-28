@@ -76,6 +76,6 @@ export default React.createClass({
     CompActions.addUnit(_.extend({}, this.state, {
       count,
       side: this.props.side
-    }))
+    }));
   }
 });
