@@ -41,9 +41,10 @@ const _defaultSide = () => {
 };
 
 const _defaultSides = () => {
-  var sides = {};
-  sides[Sides.ATTACKERS] = _defaultSide();
-  sides[Sides.DEFENDERS] = _defaultSide();
+  var sides = {
+    [Sides.ATTACKERS]: {},
+    [Sides.DEFENDERS]: {}
+  };
   return sides;
 };
 

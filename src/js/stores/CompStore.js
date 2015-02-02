@@ -12,9 +12,10 @@ export default Reflux.createStore({
   init() {
     this.sides = deserializeFromLocalStorage('compSides');
     if (!this.sides) {
-      this.sides = {};
-      this.sides[Sides.ATTACKERS] = {};
-      this.sides[Sides.DEFENDERS] = {};
+      this.sides = {
+        [Sides.ATTACKERS]: {},
+        [Sides.DEFENDERS]: {}
+      };
     }
 
     this.listenTo(CompActions.addUnit, this.addUnit);
