@@ -7,7 +7,7 @@ export default class Battle {
   constructor(setup, attackerArmy, defenderArmy) {
     this.attackerArmy = attackerArmy;
     this.defenderArmy = defenderArmy;
-    this.battlefield = new Battlefield();
+    this.battlefield = new Battlefield(setup);
   }
 
   resolve() {
@@ -23,8 +23,13 @@ export default class Battle {
 
   _runPhase(isFire) {
     this.battlefield.deploy(this.attackerArmy, this.defenderArmy);
-    _.each(this.battlefield.unitsWithTargets(), (unitWithTargets) => {
+
+    const attackerDie = _.random(9) + this.attackerArmy.leaderSkill(isFire) - this.defenderArmy.leaderSkill(isFire) + this.battlefield.attackerPenalty();
+    const defenderDie = _.random(9) + this.defenderArmy.leaderSkill(isFire) - this.attackerArmy.leaderSkill(isFire);
+
+    _.each(this.battlefield.selectTargets(), (unitWithTargets) => {
       const [unit, targets] = unitWithTargets;
+
     });
   }
 }

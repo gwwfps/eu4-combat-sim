@@ -19,3 +19,7 @@ export const Sides = constantsObject(
 export const UnitTypes = constantsObject(
   'INFANTRY', 'CAVALRY', 'ARTILLERY'
 );
+
+export const RunnerResultTypes = constantsObject(
+  'SUCCESS', 'ERROR'
+);

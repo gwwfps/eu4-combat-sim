@@ -21,7 +21,7 @@ export default class Battlefield {
 
   }
 
-  _deployMoreSide(thisSide, otherSide,, army) {
+  _deployMoreSide(thisSide, otherSide, army) {
 
   }
 
