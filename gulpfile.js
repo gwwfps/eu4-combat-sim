@@ -82,4 +82,6 @@ gulp.task('watch', function () {
   gulp.watch([path.js], ['browserify']);
 });
 
-gulp.task('default', ['jade', 'browserify', 'copy', 'stylus', 'connect', 'watch']);
+gulp.task('build', ['jade', 'browserify', 'copy', 'stylus'])
+
+gulp.task('default', ['build', 'connect', 'watch']);
